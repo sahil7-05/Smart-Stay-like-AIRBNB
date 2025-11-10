@@ -1,125 +1,160 @@
 <% layout("layouts/boilerplate") -%>
+<link rel="stylesheet" href="/css/search-form-compact.css">
 <div class="row">
   <div class="col-12">
-    <h1 class="mb-4">All Listings</h1>
+    <!-- Premium Listings Hero Section -->
+    <section class="listings-hero-section">
+      <div class="listings-hero-content">
+        <div class="listings-icon-wrapper">
+          <i class="fas fa-home listings-hero-icon"></i>
+        </div>
+        <h1 class="listings-title">All Listings</h1>
+        <p class="listings-subtitle">Discover your perfect stay from our curated collection of premium properties</p>
+        <div class="listings-decorative-line"></div>
+      </div>
+    </section>
     
-    <!-- Advanced Search Form -->
-    <form action="/listings" method="GET" class="search-form mb-4">
-      <div class="row">
-        <!-- Basic Search -->
-        <div class="col-md-3">
-          <input type="text" class="form-control" name="q" placeholder="Search by title" value="<%= filters.q || '' %>">
+    <!-- Luxury Glassmorphic Search Form -->
+    <div class="search-form-glass">
+      <div class="search-form-header">
+        <div class="search-icon-animated">
+          <i class="fas fa-search"></i>
         </div>
-        <div class="col-md-2">
-          <input type="text" class="form-control" name="location" placeholder="Location" value="<%= filters.location || '' %>">
-        </div>
-        <div class="col-md-2">
-          <select class="form-select" name="type">
-            <option value="">All Types</option>
-            <option value="stay" <%= filters.type === 'stay' ? 'selected' : '' %>>Stay</option>
-            <option value="experience" <%= filters.type === 'experience' ? 'selected' : '' %>>Experience</option>
-            <option value="restaurant" <%= filters.type === 'restaurant' ? 'selected' : '' %>>Restaurant</option>
-          </select>
-        </div>
-        <div class="col-md-2">
-          <input type="number" class="form-control" name="minPrice" placeholder="Min Price" value="<%= filters.minPrice || '' %>">
-        </div>
-        <div class="col-md-2">
-          <input type="number" class="form-control" name="maxPrice" placeholder="Max Price" value="<%= filters.maxPrice || '' %>">
-        </div>
+        <h3 class="search-title">Find Your Perfect Stay</h3>
+        <p class="search-subtitle">Discover amazing places to stay, work, or explore</p>
       </div>
+
+      <form action="/listings" method="GET" class="search-form-content">
+        <div class="search-inputs-grid">
+          <!-- Primary Search Row -->
+          <div class="search-input-group">
+            <div class="input-floating-wrapper">
+              <input type="text" class="search-input-floating" name="q" id="search-q" value="<%= filters.q || '' %>">
+              <label class="floating-label" for="search-q">
+                <i class="fas fa-home"></i> Where are you going?
+              </label>
+            </div>
+          </div>
+
+          <div class="search-input-group">
+            <div class="input-floating-wrapper">
+              <input type="text" class="search-input-floating" name="location" id="search-location" value="<%= filters.location || '' %>">
+              <label class="floating-label" for="search-location">
+                <i class="fas fa-map-marker-alt"></i> Location
+              </label>
+            </div>
+          </div>
+
+          <div class="search-input-group">
+            <div class="dropdown-animated">
+              <select class="search-select-floating" name="type" id="search-type">
+                <option value="">All Types</option>
+                <option value="stay" <%= filters.type === 'stay' ? 'selected' : '' %>>🏠 Stay</option>
+                <option value="experience" <%= filters.type === 'experience' ? 'selected' : '' %>>🎭 Experience</option>
+                <option value="restaurant" <%= filters.type === 'restaurant' ? 'selected' : '' %>>🍽️ Restaurant</option>
+              </select>
+              <label class="dropdown-label" for="search-type">
+                <i class="fas fa-tag"></i> Property Type
+              </label>
+              <i class="fas fa-chevron-down dropdown-arrow"></i>
+            </div>
+          </div>
+
+          <!-- Price Range -->
+          <div class="search-input-group price-group">
+            <div class="price-inputs-floating">
+              <div class="input-floating-wrapper">
+                <input type="number" class="search-input-floating price-input" name="minPrice" id="search-minPrice" placeholder="Min" value="<%= filters.minPrice || '' %>">
+                <label class="floating-label" for="search-minPrice">Min Price</label>
+              </div>
+              <span class="price-separator">
+                <i class="fas fa-minus"></i>
+              </span>
+              <div class="input-floating-wrapper">
+                <input type="number" class="search-input-floating price-input" name="maxPrice" id="search-maxPrice" placeholder="Max" value="<%= filters.maxPrice || '' %>">
+                <label class="floating-label" for="search-maxPrice">Max Price</label>
+              </div>
+            </div>
+            <label class="price-range-label">
+              <i class="fas fa-dollar-sign"></i> Price Range
+            </label>
+          </div>
+        </div>
       
-      <!-- Advanced Filters -->
-      <div class="row mt-3">
-        <div class="col-md-3">
-          <label class="form-label">Purpose</label>
-          <select class="form-select" name="purpose">
-            <option value="all">All Purposes</option>
-            <option value="parking" <%= filters.purpose === 'parking' ? 'selected' : '' %>>Parking</option>
-            <option value="night-stay" <%= filters.purpose === 'night-stay' ? 'selected' : '' %>>Night Stay</option>
-            <option value="permanent-rental" <%= filters.purpose === 'permanent-rental' ? 'selected' : '' %>>Permanent Rental</option>
-            <option value="godowns" <%= filters.purpose === 'godowns' ? 'selected' : '' %>>Godowns</option>
-            <option value="tuition-coaching" <%= filters.purpose === 'tuition-coaching' ? 'selected' : '' %>>Tuition/Coaching Centers</option>
-            <option value="shops-commercial" <%= filters.purpose === 'shops-commercial' ? 'selected' : '' %>>Shops/Commercial</option>
-            <option value="co-working" <%= filters.purpose === 'co-working' ? 'selected' : '' %>>Co-working</option>
-            <option value="general" <%= filters.purpose === 'general' ? 'selected' : '' %>>General</option>
-          </select>
-        </div>
-        
-        <div class="col-md-3">
-          <label class="form-label">Category</label>
-          <select class="form-select" name="category">
-            <option value="all">All Categories</option>
-            <option value="apartment" <%= filters.category === 'apartment' ? 'selected' : '' %>>Apartment</option>
-            <option value="house" <%= filters.category === 'house' ? 'selected' : '' %>>House</option>
-            <option value="villa" <%= filters.category === 'villa' ? 'selected' : '' %>>Villa</option>
-            <option value="condo" <%= filters.category === 'condo' ? 'selected' : '' %>>Condo</option>
-            <option value="studio" <%= filters.category === 'studio' ? 'selected' : '' %>>Studio</option>
-            <option value="room" <%= filters.category === 'room' ? 'selected' : '' %>>Room</option>
-            <option value="office" <%= filters.category === 'office' ? 'selected' : '' %>>Office</option>
-            <option value="shop" <%= filters.category === 'shop' ? 'selected' : '' %>>Shop</option>
-            <option value="warehouse" <%= filters.category === 'warehouse' ? 'selected' : '' %>>Warehouse</option>
-            <option value="other" <%= filters.category === 'other' ? 'selected' : '' %>>Other</option>
-          </select>
-        </div>
-        
-        <div class="col-md-3">
-          <label class="form-label">Start Date</label>
-          <input type="date" class="form-control" name="startDate" value="<%= filters.startDate || '' %>">
-        </div>
-        
-        <div class="col-md-3">
-          <label class="form-label">End Date</label>
-          <input type="date" class="form-control" name="endDate" value="<%= filters.endDate || '' %>">
-        </div>
-      </div>
-      
-      <!-- Amenities Filter -->
-      <div class="row mt-3">
-        <div class="col-12">
-          <label class="form-label">Amenities</label>
-          <div class="amenities-grid">
-            <div class="form-check form-check-inline">
-              <input class="form-check-input" type="checkbox" name="amenities" value="wifi" id="wifi" <%= filters.amenities && filters.amenities.includes('wifi') ? 'checked' : '' %>>
-              <label class="form-check-label" for="wifi">WiFi</label>
+        <!-- Advanced Filters -->
+        <div class="advanced-filters-section">
+          <div class="advanced-filters-grid">
+            <div class="filter-group">
+              <div class="dropdown-animated">
+                <select class="search-select-floating" name="purpose" id="search-purpose">
+                  <option value="all">All Purposes</option>
+                  <option value="parking" <%= filters.purpose === 'parking' ? 'selected' : '' %>>🅿️ Parking</option>
+                  <option value="night-stay" <%= filters.purpose === 'night-stay' ? 'selected' : '' %>>🌙 Night Stay</option>
+                  <option value="permanent-rental" <%= filters.purpose === 'permanent-rental' ? 'selected' : '' %>>🏠 Permanent Rental</option>
+                  <option value="godowns" <%= filters.purpose === 'godowns' ? 'selected' : '' %>>🏭 Godowns</option>
+                  <option value="tuition-coaching" <%= filters.purpose === 'tuition-coaching' ? 'selected' : '' %>>📚 Tuition/Coaching</option>
+                  <option value="shops-commercial" <%= filters.purpose === 'shops-commercial' ? 'selected' : '' %>>🏪 Shops/Commercial</option>
+                  <option value="co-working" <%= filters.purpose === 'co-working' ? 'selected' : '' %>>💼 Co-working</option>
+                  <option value="general" <%= filters.purpose === 'general' ? 'selected' : '' %>>🔧 General</option>
+                </select>
+                <label class="dropdown-label" for="search-purpose">
+                  <i class="fas fa-building"></i> Purpose
+                </label>
+                <i class="fas fa-chevron-down dropdown-arrow"></i>
+              </div>
             </div>
-            <div class="form-check form-check-inline">
-              <input class="form-check-input" type="checkbox" name="amenities" value="parking" id="parking" <%= filters.amenities && filters.amenities.includes('parking') ? 'checked' : '' %>>
-              <label class="form-check-label" for="parking">Parking</label>
+
+            <div class="filter-group">
+              <div class="dropdown-animated">
+                <select class="search-select-floating" name="category" id="search-category">
+                  <option value="all">All Categories</option>
+                  <option value="apartment" <%= filters.category === 'apartment' ? 'selected' : '' %>>🏢 Apartment</option>
+                  <option value="house" <%= filters.category === 'house' ? 'selected' : '' %>>🏠 House</option>
+                  <option value="villa" <%= filters.category === 'villa' ? 'selected' : '' %>>🏰 Villa</option>
+                  <option value="condo" <%= filters.category === 'condo' ? 'selected' : '' %>>🏙️ Condo</option>
+                  <option value="studio" <%= filters.category === 'studio' ? 'selected' : '' %>>🎨 Studio</option>
+                  <option value="room" <%= filters.category === 'room' ? 'selected' : '' %>>🛏️ Room</option>
+                  <option value="office" <%= filters.category === 'office' ? 'selected' : '' %>>🏢 Office</option>
+                  <option value="shop" <%= filters.category === 'shop' ? 'selected' : '' %>>🏪 Shop</option>
+                  <option value="warehouse" <%= filters.category === 'warehouse' ? 'selected' : '' %>>🏭 Warehouse</option>
+                  <option value="other" <%= filters.category === 'other' ? 'selected' : '' %>>🔧 Other</option>
+                </select>
+                <label class="dropdown-label" for="search-category">
+                  <i class="fas fa-tags"></i> Category
+                </label>
+                <i class="fas fa-chevron-down dropdown-arrow"></i>
+              </div>
             </div>
-            <div class="form-check form-check-inline">
-              <input class="form-check-input" type="checkbox" name="amenities" value="kitchen" id="kitchen" <%= filters.amenities && filters.amenities.includes('kitchen') ? 'checked' : '' %>>
-              <label class="form-check-label" for="kitchen">Kitchen</label>
+
+            <div class="filter-group">
+              <div class="input-floating-wrapper">
+                <input type="date" class="search-input-floating" name="startDate" id="search-startDate" value="<%= filters.startDate || '' %>">
+                <label class="floating-label" for="search-startDate">
+                  <i class="fas fa-calendar-alt"></i> Start Date
+                </label>
+              </div>
             </div>
-            <div class="form-check form-check-inline">
-              <input class="form-check-input" type="checkbox" name="amenities" value="ac" id="ac" <%= filters.amenities && filters.amenities.includes('ac') ? 'checked' : '' %>>
-              <label class="form-check-label" for="ac">AC</label>
-            </div>
-            <div class="form-check form-check-inline">
-              <input class="form-check-input" type="checkbox" name="amenities" value="tv" id="tv" <%= filters.amenities && filters.amenities.includes('tv') ? 'checked' : '' %>>
-              <label class="form-check-label" for="tv">TV</label>
-            </div>
-            <div class="form-check form-check-inline">
-              <input class="form-check-input" type="checkbox" name="amenities" value="gym" id="gym" <%= filters.amenities && filters.amenities.includes('gym') ? 'checked' : '' %>>
-              <label class="form-check-label" for="gym">Gym</label>
-            </div>
-            <div class="form-check form-check-inline">
-              <input class="form-check-input" type="checkbox" name="amenities" value="pool" id="pool" <%= filters.amenities && filters.amenities.includes('pool') ? 'checked' : '' %>>
-              <label class="form-check-label" for="pool">Pool</label>
-            </div>
-            <div class="form-check form-check-inline">
-              <input class="form-check-input" type="checkbox" name="amenities" value="laundry" id="laundry" <%= filters.amenities && filters.amenities.includes('laundry') ? 'checked' : '' %>>
-              <label class="form-check-label" for="laundry">Laundry</label>
+
+            <div class="filter-group">
+              <div class="input-floating-wrapper">
+                <input type="date" class="search-input-floating" name="endDate" id="search-endDate" value="<%= filters.endDate || '' %>">
+                <label class="floating-label" for="search-endDate">
+                  <i class="fas fa-calendar-check"></i> End Date
+                </label>
+              </div>
             </div>
           </div>
         </div>
-      </div>
       
-      <div class="row mt-3">
-        <div class="col-12">
-          <button type="submit" class="btn btn-primary me-2">Search</button>
-          <a href="/listings" class="btn btn-secondary">Clear Filters</a>
-        </div>
+
+      
+      <div class="search-actions">
+        <button type="submit" class="search-btn-primary">
+          <i>🔍</i> Search Properties
+        </button>
+        <a href="/listings" class="search-btn-secondary">
+          <i>🗑️</i> Clear All Filters
+        </a>
       </div>
     </form>
   </div>
@@ -127,8 +162,8 @@
 
 <div class="row">
   <% for (let listing of allListings) { %>
-    <div class="col-md-4 mb-4">
-      <div class="card">
+    <div class="col-lg-4 col-md-6 mb-4">
+      <div class="card listing-card">
         <img src="<%= listing.image.url %>" class="card-img-top listing-image" alt="<%= listing.title %>">
         <div class="card-body">
           <h5 class="card-title"><%= listing.title %></h5>

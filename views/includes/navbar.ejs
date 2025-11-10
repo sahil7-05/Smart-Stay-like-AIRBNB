@@ -1,43 +1,147 @@
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-  <div class="container-fluid">
-    <a class="navbar-brand" href="/listings">Wanderlust</a>
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-      <span class="navbar-toggler-icon"></span>
+<!-- Premium SmartStay Navbar -->
+<nav class="smartstay-navbar" role="navigation" aria-label="Main navigation">
+  <div class="navbar-container">
+    <!-- SmartStay Logo -->
+    <a href="/listings" class="navbar-logo" aria-label="SmartStay home page">
+      <div class="logo-icon" aria-hidden="true">🏠</div>
+      <span class="logo-text">SmartStay</span>
+    </a>
+
+    <!-- Desktop Navigation Menu -->
+    <div class="navbar-menu" role="menubar">
+      <a href="/listings" class="navbar-link" role="menuitem" aria-label="Browse homes"><i aria-hidden="true">🏠</i> Homes</a>
+      <a href="/hotels" class="navbar-link" role="menuitem" aria-label="Browse hotels"><i aria-hidden="true">🏨</i> Hotels</a>
+      <a href="/experiences" class="navbar-link" role="menuitem" aria-label="Browse experiences"><i aria-hidden="true">🎭</i> Experiences</a>
+      <a href="/services" class="navbar-link" role="menuitem" aria-label="Browse services"><i aria-hidden="true">🛎️</i> Services</a>
+      <a href="/about" class="navbar-link" role="menuitem" aria-label="About SmartStay"><i aria-hidden="true">ℹ️</i> About</a>
+      <a href="/contact" class="navbar-link" role="menuitem" aria-label="Contact us"><i aria-hidden="true">📞</i> Contact</a>
+      <% if (!currentUser) { %>
+        <a href="/login" class="navbar-link" role="menuitem" aria-label="Login to your account"><i aria-hidden="true">🔑</i> Login</a>
+        <a href="/register" class="navbar-link" role="menuitem" aria-label="Create new account"><i aria-hidden="true">📝</i> Register</a>
+      <% } else { %>
+        <a href="/profile" class="navbar-link" role="menuitem" aria-label="View your profile"><i aria-hidden="true">👤</i> Profile</a>
+        <a href="/logout" class="navbar-link" role="menuitem" aria-label="Logout from your account"><i aria-hidden="true">🚪</i> Logout</a>
+      <% } %>
+      <button class="theme-toggle" id="themeToggleDesktop" aria-label="Toggle dark mode" aria-pressed="false">
+        <i aria-hidden="true">🌙</i> Dark
+      </button>
+    </div>
+
+    <!-- Hamburger Menu Button -->
+    <button class="hamburger-btn" id="hamburgerBtn" aria-label="Toggle navigation menu" aria-expanded="false" aria-controls="dropdownMenu">
+      <span class="hamburger-line" aria-hidden="true"></span>
+      <span class="hamburger-line" aria-hidden="true"></span>
+      <span class="hamburger-line" aria-hidden="true"></span>
     </button>
-    <div class="collapse navbar-collapse" id="navbarNav">
-      <ul class="navbar-nav me-auto">
-        <li class="nav-item">
-          <a class="nav-link" href="/listings">All Listings</a>
-        </li>
-        <% if (currentUser) { %>
-          <li class="nav-item">
-            <a class="nav-link" href="/listings/new">Create Listing</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="/mybookings">My Bookings</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="/mylistings">My Listings</a>
-          </li>
-        <% } %>
-      </ul>
-      <ul class="navbar-nav">
-        <% if (!currentUser) { %>
-          <li class="nav-item">
-            <a class="nav-link" href="/register">Register</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="/login">Login</a>
-          </li>
-        <% } else { %>
-          <li class="nav-item">
-            <span class="navbar-text me-3">Welcome, <%= currentUser.name %>!</span>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="/logout">Logout</a>
-          </li>
-        <% } %>
-      </ul>
+  </div>
+
+  <!-- Dropdown Menu for Mobile -->
+  <div class="dropdown-menu" id="dropdownMenu" role="menu" aria-hidden="true">
+    <div class="navbar-menu">
+      <a href="/listings" class="navbar-link" role="menuitem" aria-label="Browse homes"><i aria-hidden="true">🏠</i> Homes</a>
+      <a href="/hotels" class="navbar-link" role="menuitem" aria-label="Browse hotels"><i aria-hidden="true">🏨</i> Hotels</a>
+      <a href="/experiences" class="navbar-link" role="menuitem" aria-label="Browse experiences"><i aria-hidden="true">🎭</i> Experiences</a>
+      <a href="/services" class="navbar-link" role="menuitem" aria-label="Browse services"><i aria-hidden="true">🛎️</i> Services</a>
+      <a href="/about" class="navbar-link" role="menuitem" aria-label="About SmartStay"><i aria-hidden="true">ℹ️</i> About</a>
+      <a href="/contact" class="navbar-link" role="menuitem" aria-label="Contact us"><i aria-hidden="true">📞</i> Contact</a>
+      <% if (currentUser) { %>
+        <a href="/profile" class="navbar-link" role="menuitem" aria-label="View your profile"><i aria-hidden="true">👤</i> Profile</a>
+        <a href="/rewards" class="navbar-link" role="menuitem" aria-label="View rewards"><i aria-hidden="true">🎁</i> Rewards</a>
+        <a href="/logout" class="navbar-link" role="menuitem" aria-label="Logout from your account"><i aria-hidden="true">🚪</i> Logout</a>
+      <% } else { %>
+        <a href="/login" class="navbar-link" role="menuitem" aria-label="Login to your account"><i aria-hidden="true">🔑</i> Login</a>
+        <a href="/register" class="navbar-link" role="menuitem" aria-label="Create new account"><i aria-hidden="true">📝</i> Register</a>
+      <% } %>
+      <button class="theme-toggle" id="themeToggleMobile" aria-label="Toggle dark mode" aria-pressed="false">
+        <i aria-hidden="true">🌙</i> Dark
+      </button>
     </div>
   </div>
 </nav>
+
+<!-- Sidebar Overlay -->
+<div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+<script>
+// Premium SmartStay Navbar Functionality
+document.addEventListener('DOMContentLoaded', function() {
+  const hamburgerBtn = document.getElementById('hamburgerBtn');
+  const dropdownMenu = document.getElementById('dropdownMenu');
+  const sidebarOverlay = document.getElementById('sidebarOverlay');
+  const themeToggleDesktop = document.getElementById('themeToggleDesktop');
+  const themeToggleMobile = document.getElementById('themeToggleMobile');
+
+  // Toggle dropdown menu
+  function toggleDropdown() {
+    const isOpen = dropdownMenu.classList.toggle('open');
+    hamburgerBtn.classList.toggle('active');
+    hamburgerBtn.setAttribute('aria-expanded', isOpen);
+    dropdownMenu.setAttribute('aria-hidden', !isOpen);
+  }
+
+  // Close dropdown menu
+  function closeDropdown() {
+    dropdownMenu.classList.remove('open');
+    hamburgerBtn.classList.remove('active');
+    hamburgerBtn.setAttribute('aria-expanded', 'false');
+    dropdownMenu.setAttribute('aria-hidden', 'true');
+  }
+
+  // Event listeners
+  hamburgerBtn.addEventListener('click', toggleDropdown);
+  sidebarOverlay.addEventListener('click', closeDropdown);
+
+  // Close dropdown when clicking menu links
+  document.querySelectorAll('.navbar-link').forEach(link => {
+    link.addEventListener('click', closeDropdown);
+  });
+
+  // Theme toggle functionality with localStorage persistence
+  function toggleTheme() {
+    const body = document.body;
+    const isDark = body.classList.contains('theme-dark');
+    if (isDark) {
+      body.classList.remove('theme-dark');
+      localStorage.setItem('theme', 'light');
+    } else {
+      body.classList.add('theme-dark');
+      localStorage.setItem('theme', 'dark');
+    }
+    updateThemeIcons();
+  }
+
+  // Update theme icons
+  function updateThemeIcons() {
+    const isDark = document.body.classList.contains('theme-dark');
+    const icon = isDark ? '☀️' : '🌙';
+    const text = isDark ? 'Light' : 'Dark';
+
+    if (themeToggleDesktop) {
+      themeToggleDesktop.innerHTML = `<i>${icon}</i> ${text}`;
+    }
+    if (themeToggleMobile) {
+      themeToggleMobile.innerHTML = `<i>${icon}</i> ${text}`;
+    }
+  }
+
+  // Initialize theme on page load
+  function initializeTheme() {
+    const savedTheme = localStorage.getItem('theme');
+    if (savedTheme === 'dark') {
+      document.body.classList.add('theme-dark');
+    }
+    updateThemeIcons();
+  }
+
+  // Event listeners for theme toggles
+  if (themeToggleDesktop) {
+    themeToggleDesktop.addEventListener('click', toggleTheme);
+  }
+  if (themeToggleMobile) {
+    themeToggleMobile.addEventListener('click', toggleTheme);
+  }
+
+  // Initialize theme
+  initializeTheme();
+});
+</script>

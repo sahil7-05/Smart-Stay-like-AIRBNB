@@ -1,0 +1,626 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SmartStay - Premium Navigation</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="public/css/luxury-dashboard.css">
+  <style>
+    /* Premium SmartStay Navbar Styles */
+    :root {
+      --primary-red: #e74c3c;
+      --primary-red-dark: #c0392b;
+      --primary-red-light: #ec7063;
+      --white: #ffffff;
+      --gray-light: #f8f9fa;
+      --gray-medium: #6c757d;
+      --gray-dark: #343a40;
+      --shadow-light: 0 2px 10px rgba(231, 76, 60, 0.1);
+      --shadow-medium: 0 4px 20px rgba(231, 76, 60, 0.15);
+      --shadow-heavy: 0 8px 30px rgba(231, 76, 60, 0.2);
+      --border-radius: 12px;
+      --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      margin: 0;
+      padding: 0;
+      background: var(--gray-light);
+      color: var(--gray-dark);
+    }
+
+    /* Premium Navbar */
+    .smartstay-navbar {
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-bottom: 1px solid rgba(231, 76, 60, 0.1);
+      box-shadow: var(--shadow-light);
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 1000;
+      padding: 1rem 2rem;
+      border-radius: 0 0 var(--border-radius) var(--border-radius);
+    }
+
+    .navbar-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: relative;
+    }
+
+    .navbar-left {
+      display: flex;
+      align-items: center;
+    }
+
+    .navbar-center {
+      position: absolute;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      align-items: center;
+      gap: 2rem;
+      margin-right: 2rem;
+    }
+
+    .navbar-right {
+      display: flex;
+      align-items: center;
+    }
+
+    /* Logo */
+    .navbar-logo {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      text-decoration: none;
+      color: var(--gray-dark);
+      font-weight: 800;
+      font-size: 2rem;
+      transition: var(--transition);
+      animation: logoGlow 2s ease-in-out infinite alternate;
+    }
+
+    @keyframes logoGlow {
+      from {
+        text-shadow:
+          0 0 5px rgba(231, 76, 60, 0.3),
+          0 0 10px rgba(231, 76, 60, 0.2),
+          0 0 15px rgba(231, 76, 60, 0.1);
+      }
+      to {
+        text-shadow:
+          0 0 10px rgba(231, 76, 60, 0.5),
+          0 0 20px rgba(231, 76, 60, 0.3),
+          0 0 30px rgba(231, 76, 60, 0.2);
+      }
+    }
+
+    .navbar-logo:hover {
+      transform: scale(1.08) translateY(-2px);
+      text-shadow:
+        0 0 20px rgba(231, 76, 60, 0.6),
+        0 0 40px rgba(231, 76, 60, 0.4),
+        0 0 60px rgba(231, 76, 60, 0.3);
+    }
+
+    .logo-icon {
+      width: 60px;
+      height: 60px;
+      background:
+        linear-gradient(135deg, var(--primary-red) 0%, var(--primary-red-light) 50%, var(--primary-red-dark) 100%),
+        radial-gradient(circle at 30% 30%, rgba(255, 255, 255, 0.3) 0%, transparent 50%);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--white);
+      font-size: 1.8rem;
+      box-shadow:
+        0 8px 25px rgba(231, 76, 60, 0.4),
+        0 4px 15px rgba(0, 0, 0, 0.2),
+        inset 0 2px 0 rgba(255, 255, 255, 0.2),
+        inset 0 -2px 0 rgba(0, 0, 0, 0.1);
+      position: relative;
+      overflow: hidden;
+      animation: iconPulse 3s ease-in-out infinite;
+    }
+
+    .logo-icon::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: linear-gradient(
+        45deg,
+        transparent 30%,
+        rgba(255, 255, 255, 0.1) 50%,
+        transparent 70%
+      );
+      animation: shine 4s ease-in-out infinite;
+    }
+
+    @keyframes iconPulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.05); }
+    }
+
+    @keyframes shine {
+      0% { transform: rotate(0deg) translateX(-100%); }
+      100% { transform: rotate(0deg) translateX(100%); }
+    }
+
+    .logo-text {
+      background: linear-gradient(135deg, var(--primary-red) 0%, var(--primary-red-light) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      font-weight: 900;
+      letter-spacing: -0.02em;
+      text-transform: uppercase;
+      position: relative;
+    }
+
+    .logo-text::after {
+      content: '';
+      position: absolute;
+      bottom: -5px;
+      left: 0;
+      width: 100%;
+      height: 3px;
+      background: linear-gradient(90deg, var(--primary-red) 0%, var(--primary-red-light) 100%);
+      border-radius: 2px;
+      animation: underlineGrow 2s ease-in-out infinite alternate;
+    }
+
+    @keyframes underlineGrow {
+      from { width: 0; opacity: 0; }
+      to { width: 100%; opacity: 1; }
+    }
+
+    /* Navigation Menu */
+    .navbar-menu {
+      display: flex;
+      align-items: center;
+      gap: 2rem;
+      margin-left: 0;
+    }
+
+    .navbar-link {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.75rem 1rem;
+      color: var(--gray-dark);
+      text-decoration: none;
+      font-weight: 500;
+      border-radius: var(--border-radius);
+      transition: var(--transition);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .navbar-link::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(231, 76, 60, 0.1), transparent);
+      transition: left 0.5s;
+    }
+
+    .navbar-link:hover::before {
+      left: 100%;
+    }
+
+    .navbar-link:hover {
+      background: rgba(231, 76, 60, 0.05);
+      color: var(--primary-red);
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-medium);
+    }
+
+    .navbar-link i {
+      font-size: 1.1rem;
+    }
+
+    /* Hamburger Button */
+    .hamburger-btn {
+      display: none;
+      flex-direction: column;
+      justify-content: center;
+      width: 48px;
+      height: 48px;
+      background: rgba(255, 255, 255, 0.9);
+      border: 1px solid rgba(231, 76, 60, 0.2);
+      border-radius: var(--border-radius);
+      cursor: pointer;
+      transition: var(--transition);
+      box-shadow: var(--shadow-light);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hamburger-btn:hover {
+      transform: scale(1.05);
+      box-shadow: var(--shadow-medium);
+      border-color: var(--primary-red);
+    }
+
+    .hamburger-btn.active {
+      background: linear-gradient(135deg, var(--primary-red) 0%, var(--primary-red-light) 100%);
+      border-color: var(--primary-red);
+    }
+
+    .hamburger-btn.active .hamburger-line {
+      background: var(--white);
+    }
+
+    .hamburger-line {
+      width: 24px;
+      height: 2px;
+      background: var(--primary-red);
+      margin: 3px auto;
+      transition: var(--transition);
+      border-radius: 1px;
+    }
+
+    .hamburger-btn.active .hamburger-line:nth-child(1) {
+      transform: rotate(45deg) translate(6px, 6px);
+    }
+
+    .hamburger-btn.active .hamburger-line:nth-child(2) {
+      opacity: 0;
+    }
+
+    .hamburger-btn.active .hamburger-line:nth-child(3) {
+      transform: rotate(-45deg) translate(6px, -6px);
+    }
+
+    /* Dropdown Menu */
+    .dropdown-menu {
+      position: absolute;
+      top: 100%;
+      left: 0;
+      right: 0;
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-radius: 0 0 var(--border-radius) var(--border-radius);
+      box-shadow: var(--shadow-heavy);
+      transform: translateY(-100%);
+      opacity: 0;
+      visibility: hidden;
+      transition: var(--transition);
+      padding: 1rem 2rem;
+      border-top: 1px solid rgba(231, 76, 60, 0.1);
+    }
+
+    .dropdown-menu.open {
+      transform: translateY(0);
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .dropdown-menu .navbar-menu {
+      flex-direction: column;
+      gap: 1rem;
+      align-items: stretch;
+    }
+
+    .dropdown-menu .navbar-link {
+      justify-content: flex-start;
+      padding: 1rem;
+      border-radius: var(--border-radius);
+    }
+
+    /* Theme Toggle */
+    .theme-toggle {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.5rem 1rem;
+      background: rgba(255, 255, 255, 0.9);
+      border: 1px solid rgba(231, 76, 60, 0.2);
+      border-radius: 50px;
+      cursor: pointer;
+      transition: var(--transition);
+      box-shadow: var(--shadow-light);
+      font-size: 0.9rem;
+      font-weight: 500;
+      color: var(--gray-dark);
+      margin-right: 1rem;
+    }
+
+    .theme-toggle:hover {
+      background: rgba(231, 76, 60, 0.05);
+      border-color: var(--primary-red);
+      box-shadow: var(--shadow-medium);
+    }
+
+    .theme-toggle i {
+      font-size: 1.1rem;
+      transition: var(--transition);
+    }
+
+    /* Search Section */
+    .search-section {
+      margin-top: 80px;
+      padding: 2rem;
+      background: linear-gradient(135deg, var(--white) 0%, rgba(248, 249, 250, 0.8) 100%);
+      border-radius: var(--border-radius);
+      box-shadow: var(--shadow-medium);
+      max-width: 1200px;
+      margin-left: auto;
+      margin-right: auto;
+      margin-bottom: 2rem;
+    }
+
+    .search-container {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .search-field {
+      flex: 1;
+      min-width: 200px;
+      padding: 1rem 1.5rem;
+      border: 2px solid rgba(231, 76, 60, 0.2);
+      border-radius: var(--border-radius);
+      font-family: 'Inter', sans-serif;
+      font-size: 1rem;
+      background: var(--white);
+      transition: var(--transition);
+      box-shadow: var(--shadow-light);
+    }
+
+    .search-field:focus {
+      outline: none;
+      border-color: var(--primary-red);
+      box-shadow: var(--shadow-medium);
+      transform: translateY(-2px);
+    }
+
+    .search-field::placeholder {
+      color: var(--gray-medium);
+    }
+
+    .search-btn {
+      width: 56px;
+      height: 56px;
+      background: linear-gradient(135deg, var(--primary-red) 0%, var(--primary-red-light) 100%);
+      border: none;
+      border-radius: 50%;
+      color: var(--white);
+      font-size: 1.25rem;
+      cursor: pointer;
+      transition: var(--transition);
+      box-shadow: var(--shadow-medium);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .search-btn:hover {
+      transform: scale(1.1);
+      box-shadow: var(--shadow-heavy);
+      background: linear-gradient(135deg, var(--primary-red-dark) 0%, var(--primary-red) 100%);
+    }
+
+    /* Dark Mode */
+    .theme-dark {
+      --gray-light: #1a1a1a;
+      --gray-medium: #9ca3af;
+      --gray-dark: #f3f4f6;
+      --white: #1f2937;
+    }
+
+    .theme-dark .smartstay-navbar {
+      background: rgba(31, 41, 55, 0.95);
+      border-bottom-color: rgba(231, 76, 60, 0.2);
+    }
+
+    .theme-dark .navbar-logo {
+      color: var(--gray-dark);
+    }
+
+    .theme-dark .navbar-link {
+      color: var(--gray-dark);
+    }
+
+    .theme-dark .navbar-link:hover {
+      background: rgba(231, 76, 60, 0.1);
+      color: var(--primary-red-light);
+    }
+
+    .theme-dark .dropdown-menu {
+      background: rgba(31, 41, 55, 0.95);
+    }
+
+    .theme-dark .search-section {
+      background: linear-gradient(135deg, #1f2937 0%, rgba(26, 26, 26, 0.8) 100%);
+    }
+
+    .theme-dark .search-field {
+      background: #374151;
+      border-color: rgba(231, 76, 60, 0.3);
+      color: var(--gray-dark);
+    }
+
+    .theme-dark .search-field::placeholder {
+      color: var(--gray-medium);
+    }
+
+    /* Mobile Responsiveness */
+    @media (max-width: 768px) {
+      .smartstay-navbar {
+        padding: 1rem;
+      }
+
+      .navbar-logo {
+        font-size: 1.5rem;
+        gap: 0.75rem;
+      }
+
+      .logo-icon {
+        width: 48px;
+        height: 48px;
+        font-size: 1.4rem;
+      }
+
+      .navbar-center {
+        display: none;
+      }
+
+      .navbar-menu {
+        display: none;
+      }
+
+      .hamburger-btn {
+        display: flex;
+      }
+
+      .search-container {
+        flex-direction: column;
+        align-items: stretch;
+      }
+
+      .search-field {
+        min-width: auto;
+      }
+
+      .search-btn {
+        align-self: center;
+        margin-top: 1rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Premium SmartStay Navbar -->
+  <nav class="smartstay-navbar">
+    <div class="navbar-container">
+      <div class="navbar-left">
+        <a href="#" class="navbar-logo">
+          <div class="logo-icon">🏠</div>
+          <span class="logo-text">SmartStay</span>
+        </a>
+      </div>
+
+      <div class="navbar-center">
+        <a href="#" class="navbar-link"><i>🏠</i> Homes</a>
+        <a href="#" class="navbar-link"><i>🎭</i> Experiences</a>
+        <a href="#" class="navbar-link"><i>🛎️</i> Services</a>
+        <a href="#" class="navbar-link"><i>ℹ️</i> About</a>
+        <a href="#" class="navbar-link"><i>📞</i> Contact</a>
+      </div>
+
+      <div class="navbar-right">
+        <button class="theme-toggle" id="themeToggle">
+          <i>🌙</i> Dark
+        </button>
+        <button class="hamburger-btn" id="hamburgerBtn">
+          <span class="hamburger-line"></span>
+          <span class="hamburger-line"></span>
+          <span class="hamburger-line"></span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Dropdown Menu -->
+    <div class="dropdown-menu" id="dropdownMenu">
+      <div class="navbar-menu">
+        <a href="#" class="navbar-link"><i>🏠</i> Homes</a>
+        <a href="#" class="navbar-link"><i>🎭</i> Experiences</a>
+        <a href="#" class="navbar-link"><i>🛎️</i> Services</a>
+        <a href="#" class="navbar-link"><i>ℹ️</i> About</a>
+        <a href="#" class="navbar-link"><i>📞</i> Contact</a>
+        <button class="theme-toggle" id="themeToggleMobile">
+          <i>🌙</i> Dark
+        </button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Search Section -->
+  <section class="search-section">
+    <div class="search-container">
+      <input type="text" class="search-field" placeholder="Where are you going?" id="whereField">
+      <input type="date" class="search-field" id="checkinField">
+      <input type="date" class="search-field" id="checkoutField">
+      <input type="number" class="search-field" placeholder="Guests" min="1" id="guestsField">
+      <button class="search-btn" id="searchBtn">
+        <i>🔍</i>
+      </button>
+    </div>
+  </section>
+
+  <!-- Hero Content Placeholder -->
+  <main style="padding: 2rem; text-align: center;">
+    <h1>Welcome to SmartStay</h1>
+    <p>Find your perfect stay with our premium booking experience.</p>
+  </main>
+
+  <script>
+    // Hamburger Menu Toggle
+    const hamburgerBtn = document.getElementById('hamburgerBtn');
+    const dropdownMenu = document.getElementById('dropdownMenu');
+
+    hamburgerBtn.addEventListener('click', () => {
+      dropdownMenu.classList.toggle('open');
+      hamburgerBtn.classList.toggle('active');
+    });
+
+    // Theme Toggle
+    const themeToggle = document.getElementById('themeToggle');
+    const themeToggleMobile = document.getElementById('themeToggleMobile');
+    const body = document.body;
+
+    function toggleTheme() {
+      body.classList.toggle('theme-dark');
+      const isDark = body.classList.contains('theme-dark');
+      const icon = isDark ? '☀️' : '🌙';
+      const text = isDark ? 'Light' : 'Dark';
+      themeToggle.innerHTML = `<i>${icon}</i> ${text}`;
+      themeToggleMobile.innerHTML = `<i>${icon}</i> ${text}`;
+    }
+
+    themeToggle.addEventListener('click', toggleTheme);
+    themeToggleMobile.addEventListener('click', toggleTheme);
+
+    // Search Button Animation
+    const searchBtn = document.getElementById('searchBtn');
+    searchBtn.addEventListener('click', () => {
+      searchBtn.style.transform = 'scale(0.95)';
+      setTimeout(() => {
+        searchBtn.style.transform = 'scale(1)';
+        alert('Search functionality would be implemented here!');
+      }, 150);
+    });
+
+    // Close dropdown on outside click
+    document.addEventListener('click', (e) => {
+      if (!hamburgerBtn.contains(e.target) && !dropdownMenu.contains(e.target)) {
+        dropdownMenu.classList.remove('open');
+        hamburgerBtn.classList.remove('active');
+      }
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,86 @@
+<% layout("layouts/boilerplate") -%>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+<div class="row">
+  <div class="col-12">
+    <!-- Premium Hotel Search Hero Section -->
+    <section class="listings-hero-section">
+      <div class="listings-hero-content">
+        <div class="listings-icon-wrapper">
+          <i class="fas fa-hotel listings-hero-icon"></i>
+        </div>
+        <h1 class="listings-title">Find Hotels Worldwide</h1>
+        <p class="listings-subtitle">Discover amazing hotels using OpenStreetMap data - free and comprehensive</p>
+        <div class="listings-decorative-line"></div>
+      </div>
+    </section>
+
+    <div class="container mt-4">
+      <h2 class="text-center mb-3">Search Hotels</h2>
+
+      <form id="hotelForm" class="mb-4">
+        <div class="input-group">
+          <input type="text" id="query" class="form-control" placeholder="Enter city name" required />
+          <button type="submit" class="btn btn-primary">Search</button>
+        </div>
+      </form>
+
+      <div id="loading" style="display:none;" class="text-center text-info">Loading hotels...</div>
+      <div id="error" style="display:none;" class="text-center text-danger"></div>
+
+      <div id="hotelsContainer" class="row gy-3"></div>
+
+      <!-- ✅ MAP CONTAINER -->
+      <div id="map" style="height: 500px; width: 100%; margin-top: 25px; border-radius: 10px;"></div>
+    </div>
+  </div>
+</div>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="/js/hotels.js"></script>
+
+<style>
+.hotel-card {
+  background: rgba(248, 244, 238, 0.9);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(201, 161, 91, 0.2);
+  border-radius: 16px;
+  box-shadow: 0 8px 30px rgba(11, 35, 64, 0.08);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.hotel-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 16px 40px rgba(11, 35, 64, 0.12);
+  border-color: rgba(201, 161, 91, 0.4);
+}
+
+.hotel-card .card-title {
+  color: #0b2340;
+  font-family: 'Crimson Text', serif;
+  font-weight: 600;
+}
+
+.hotel-card .card-text {
+  color: #666;
+  margin-bottom: 0.5rem;
+}
+
+.hotel-card .card-text i {
+  color: #c9a15b;
+  margin-right: 0.5rem;
+}
+
+.hotel-card a {
+  color: #c9a15b;
+  text-decoration: none;
+}
+
+.hotel-card a:hover {
+  text-decoration: underline;
+}
+
+#hotelMap {
+  border: 1px solid rgba(201, 161, 91, 0.2);
+}
+</style>

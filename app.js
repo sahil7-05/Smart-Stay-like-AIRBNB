@@ -15,6 +15,7 @@ const flash = require("connect-flash");
 const passport = require("passport");
 const LocalStrategy = require("passport-local").Strategy;
 const bcrypt = require("bcryptjs");
+const fetch = require("node-fetch");
 
 const multer = require("multer");
 let upload;
@@ -202,10 +203,9 @@ app.get("/listings/:id", async (req, res) => {
   const { id } = req.params;
   const listing = await Listing.findById(id);
   const reviews = await Review.find({ listing: id }).populate("user");
-  res.render("listings/show-enhanced", { 
-    listing, 
-    reviews, 
-    googleMapsApiKey: process.env.GOOGLE_MAPS_API_KEY 
+  res.render("listings/show-enhanced", {
+    listing,
+    reviews
   });
 });
 
@@ -361,7 +361,7 @@ app.delete("/listings/:id/reviews/:reviewId", isLoggedIn, async (req, res) => {
   }
 });
 
-/* ---------------- GOOGLE MAPS API ------------------ */
+/* ---------------- LEAFLET MAPS API ------------------ */
 app.get("/listings/:id/map", async (req, res) => {
   const { id } = req.params;
   const listing = await Listing.findById(id);
@@ -369,8 +369,124 @@ app.get("/listings/:id/map", async (req, res) => {
     req.flash("error", "Listing not found");
     return res.redirect("/listings");
   }
-  res.render("listings/map", { listing, googleMapsApiKey: process.env.GOOGLE_MAPS_API_KEY });
+  res.render("listings/map", { listing });
 });
+
+/* ---------------- HOTEL SEARCH API ------------------ */
+app.get("/api/search-hotels", async (req, res) => {
+  const query = req.query.q;
+  if (!query) {
+    return res.status(400).json({ error: "Missing location query" });
+  }
+
+  try {
+    console.log(`[search-hotels] Query received: "${query}"`);
+
+    // 1) Geocode using Nominatim
+    const nominatimURL = `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(query)}&format=json&limit=1`;
+    console.log("[search-hotels] Nominatim URL:", nominatimURL);
+    const geoResponse = await fetch(nominatimURL, {
+      headers: {
+        "User-Agent": "SmartStayApp/1.0 (bhupender.dev09@gmail.com)",
+        "Accept-Language": "en",
+      },
+    });
+
+    if (!geoResponse.ok) {
+      const text = await geoResponse.text();
+      console.error("Nominatim error:", text);
+      return res.status(geoResponse.status).json({ error: "Nominatim request failed", details: text });
+    }
+
+    const geoData = await geoResponse.json();
+
+    if (!geoData.length) {
+      return res.status(404).json({ error: "Location not found" });
+    }
+
+    const { lat, lon } = geoData[0];
+    console.log(`[search-hotels] Geocoded: lat=${lat}, lon=${lon}`);
+
+    // 2) Build Overpass query - include hotels
+    const overpassQuery = `[out:json][timeout:25];
+      (
+        node["tourism"="hotel"](around:5000,${lat},${lon});
+        way["tourism"="hotel"](around:5000,${lat},${lon});
+        relation["tourism"="hotel"](around:5000,${lat},${lon});
+      );
+      out center;`;
+
+    // Try primary Overpass endpoint, fallback to alternative if it times out or 500/504
+    const overpassEndpoints = [
+      "https://overpass-api.de/api/interpreter",
+      "https://overpass.kumi.systems/api/interpreter",
+      "https://overpass.openstreetmap.fr/api/interpreter"
+    ];
+
+    let overpassData = null;
+    for (const ep of overpassEndpoints) {
+      try {
+        console.log(`[search-hotels] Querying Overpass: ${ep}`);
+        const overRes = await fetch(ep, {
+          method: "POST",
+          body: overpassQuery,
+          headers: {
+            "User-Agent": "SmartStay/1.0 (bhupender.dev09@gmail.com)",
+            "Content-Type": "application/x-www-form-urlencoded"
+          },
+        });
+
+        if (!overRes.ok) {
+          console.warn(`[search-hotels] Overpass ${ep} returned HTTP ${overRes.status}`);
+          // try next endpoint
+          continue;
+        }
+
+        overpassData = await overRes.json();
+        if (overpassData && Array.isArray(overpassData.elements)) {
+          console.log(`[search-hotels] Overpass returned ${overpassData.elements.length} elements from ${ep}`);
+          break;
+        }
+      } catch (err) {
+        console.warn(`[search-hotels] Overpass fetch error for ${ep}:`, err.message);
+        // try next endpoint
+      }
+    }
+
+    if (!overpassData || !Array.isArray(overpassData.elements)) {
+      console.error("[search-hotels] Overpass failed on all endpoints or returned invalid data");
+      return res.status(502).json({ error: "Overpass query failed or timed out. Try again later." });
+    }
+
+    // 3) Normalize results
+    const hotels = overpassData.elements
+      .map(el => {
+        const lat = el.lat ?? (el.center && el.center.lat);
+        const lon = el.lon ?? (el.center && el.center.lon);
+        return {
+          id: el.id,
+          osm_type: el.type,
+          name: el.tags?.name || "Unnamed",
+          lat,
+          lon,
+          address: el.tags?.["addr:full"] || el.tags?.["addr:street"] || el.tags?.["addr:city"] || null,
+          phone: el.tags?.phone || null,
+          website: el.tags?.website || null,
+          stars: el.tags?.stars || null,
+          tags: el.tags || {}
+        };
+      })
+      .filter(h => h.lat && h.lon);
+
+    console.log(`[search-hotels] Responding with ${hotels.length} normalized hotels`);
+    return res.json({ hotels });
+  } catch (err) {
+    console.error("[search-hotels] Unexpected server error:", err);
+    return res.status(500).json({ error: "Server error", message: err.message });
+  }
+});
+
+app.get("/hotels", (req, res) => res.render("listings/hotels"));
 
 /* -------------- helper ------------------ */
 function isLoggedIn(req, res, next) {
@@ -385,5 +501,8 @@ app.use((err, req, res, next) => {
 });
 
 app.get("/", (req, res) => res.redirect("/listings"));
+
+/* ---------------- ABOUT PAGE ------------------ */
+app.get("/about", (req, res) => res.render("about"));
 
 app.listen(8080, () => console.log("server started on port 8080"));

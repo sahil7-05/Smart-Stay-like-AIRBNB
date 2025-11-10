@@ -42,6 +42,57 @@
       <div id="map" style="height: 300px; width: 100%;" class="mb-3 border rounded"></div>
     </div>
 
+
+
+    <script>
+    document.addEventListener("DOMContentLoaded", async function () {
+      // Convert the listing object into a usable JS object
+      const listing = <%- JSON.stringify(listing) %>;
+      const mapContainer = document.getElementById("map");
+
+      // If there is no location in the listing, show a message
+      if (!listing.location) {
+        mapContainer.innerHTML = "<p class='text-danger'>No location found.</p>";
+        return;
+      }
+
+      try {
+        // Fetch coordinates using Nominatim API
+        const response = await fetch(
+          `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(listing.location)}`
+        );
+        const data = await response.json();
+
+        if (data.length === 0) {
+          mapContainer.innerHTML = "<p class='text-danger'>Unable to find location on map.</p>";
+          return;
+        }
+
+        // Extract latitude and longitude
+        const lat = parseFloat(data[0].lat);
+        const lon = parseFloat(data[0].lon);
+
+        // Initialize map with coordinates
+        const map = L.map("map").setView([lat, lon], 13);
+
+        // Add OpenStreetMap tiles
+        L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+          attribution: '&copy; OpenStreetMap contributors',
+        }).addTo(map);
+
+        // Add marker on the location
+        L.marker([lat, lon])
+          .addTo(map)
+          .bindPopup(`<b>${listing.title}</b><br>${listing.location}`)
+          .openPopup();
+
+      } catch (error) {
+        console.error("Map error:", error);
+        mapContainer.innerHTML = "<p class='text-danger'>Error loading map.</p>";
+      }
+    });
+    </script>
+
     <!-- Add Review Form (Inline) -->
     <div class="mt-5">
       <h3>Reviews & Ratings</h3>
@@ -148,69 +199,17 @@
 <!-- Add Font Awesome for icons -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 
-    <!-- Google Maps API -->
+    <!-- Star rating functionality -->
 <script>
-function initMap() {
-  const listing = <%- JSON.stringify(listing) %>;
-  const location = listing.location + ', ' + listing.country;
-  
-  // Check if Google Maps API is loaded
-  if (typeof google === 'undefined') {
-    document.getElementById('map').innerHTML = '<p class="text-danger">Map service unavailable. Please check your internet connection.</p>';
-    return;
-  }
-  
-  const geocoder = new google.maps.Geocoder();
-  geocoder.geocode({ 'address': location }, function(results, status) {
-    if (status === 'OK') {
-      const map = new google.maps.Map(document.getElementById('map'), {
-        zoom: 15,
-        center: results[0].geometry.location,
-        mapTypeId: 'roadmap'
-      });
-      
-      const marker = new google.maps.Marker({
-        map: map,
-        position: results[0].geometry.location,
-        title: listing.title,
-        animation: google.maps.Animation.DROP
-      });
-      
-      const infoWindow = new google.maps.InfoWindow({
-        content: `
-          <div style="max-width: 200px;">
-            <h6>${listing.title}</h6>
-            <p>${listing.description.substring(0, 100)}...</p>
-            <p><strong>$${listing.price}/night</strong></p>
-          </div>
-        `
-      });
-      
-      marker.addListener('click', function() {
-        infoWindow.open(map, marker);
-      });
-      
-      // Center map on resize
-      google.maps.event.addDomListener(window, 'resize', function() {
-        map.setCenter(results[0].geometry.location);
-      });
-    } else {
-      console.error('Geocode was not successful for the following reason: ' + status);
-      document.getElementById('map').innerHTML = '<p class="text-danger">Unable to load map. Please check the address: ' + location + '</p>';
-    }
-  });
-}
-
-// Star rating functionality
 document.addEventListener('DOMContentLoaded', function() {
   const stars = document.querySelectorAll('.star-rating');
   const ratingInput = document.getElementById('rating');
-  
+
   stars.forEach(star => {
     star.addEventListener('click', function() {
       const rating = this.getAttribute('data-rating');
       ratingInput.value = rating;
-      
+
       // Update visual state
       stars.forEach(s => {
         const starRating = parseInt(s.getAttribute('data-rating'));
@@ -223,7 +222,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
       });
     });
-    
+
     star.addEventListener('mouseover', function() {
       const rating = this.getAttribute('data-rating');
       stars.forEach(s => {
@@ -233,7 +232,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
       });
     });
-    
+
     star.addEventListener('mouseout', function() {
       const rating = ratingInput.value || 0;
       stars.forEach(s => {
@@ -249,19 +248,6 @@ document.addEventListener('DOMContentLoaded', function() {
     });
   });
 });
-
-// Review form submission
-document.getElementById('reviewForm')?.addEventListener('submit', function(e) {
-  const rating = document.getElementById('rating').value;
-  if (!rating) {
-    e.preventDefault();
-    alert('Please select a rating');
-  }
-});
-</script>
-
-<script async defer
-  src="https://maps.googleapis.com/maps/api/js?key=<%= googleMapsApiKey %>&callback=initMap">
 </script>
 
 <style>

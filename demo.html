@@ -1,0 +1,590 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Premium Luxury Dashboard</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Crimson+Text:ital,wght@0,400;0,600;0,700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="public/css/luxury-dashboard.css">
+  <style>
+    /* Enhanced Premium Styles */
+    .luxury-navbar {
+      background: linear-gradient(135deg, rgba(248, 244, 238, 0.95) 0%, rgba(248, 244, 238, 0.98) 100%);
+      backdrop-filter: blur(25px);
+      -webkit-backdrop-filter: blur(25px);
+      border-bottom: 1px solid rgba(201, 161, 91, 0.2);
+      box-shadow: 0 4px 20px rgba(11, 35, 64, 0.08);
+    }
+
+    .sidebar {
+      position: fixed;
+      top: -100vh;
+      left: 0;
+      width: 100%;
+      height: 100vh;
+      background: linear-gradient(135deg, rgba(248, 244, 238, 0.98) 0%, rgba(248, 244, 238, 0.95) 100%);
+      backdrop-filter: blur(30px);
+      -webkit-backdrop-filter: blur(30px);
+      box-shadow: 0 -4px 30px rgba(11, 35, 64, 0.15);
+      z-index: 1050;
+      transition: top 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      border-bottom: 1px solid rgba(201, 161, 91, 0.3);
+    }
+
+    .sidebar.open {
+      top: 0;
+    }
+
+    .sidebar-content {
+      max-width: 400px;
+      margin: 0 auto;
+      padding: 2rem;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .sidebar-menu {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      margin-top: 2rem;
+    }
+
+    .sidebar-link {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      padding: 1rem 1.5rem;
+      color: #0b2340;
+      text-decoration: none;
+      font-family: 'Inter', sans-serif;
+      font-size: 1.1rem;
+      font-weight: 500;
+      border-radius: 12px;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      position: relative;
+      overflow: hidden;
+      border: 1px solid transparent;
+    }
+
+    .sidebar-link::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(201, 161, 91, 0.1), transparent);
+      transition: left 0.5s;
+    }
+
+    .sidebar-link:hover::before {
+      left: 100%;
+    }
+
+    .sidebar-link:hover {
+      background: linear-gradient(135deg, rgba(201, 161, 91, 0.08) 0%, rgba(11, 35, 64, 0.05) 100%);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 25px rgba(201, 161, 91, 0.15);
+      border-color: rgba(201, 161, 91, 0.3);
+    }
+
+    .sidebar-link i {
+      font-size: 1.2rem;
+      width: 24px;
+      text-align: center;
+      opacity: 0.8;
+    }
+
+    .sidebar-link:hover i {
+      opacity: 1;
+      transform: scale(1.1);
+    }
+
+    .theme-toggle-sidebar {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.75rem;
+      padding: 1rem 1.5rem;
+      background: linear-gradient(135deg, rgba(11, 35, 64, 0.05) 0%, rgba(201, 161, 91, 0.08) 100%);
+      border: 1px solid rgba(201, 161, 91, 0.2);
+      border-radius: 12px;
+      color: #0b2340;
+      font-family: 'Inter', sans-serif;
+      font-size: 1rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      box-shadow: 0 2px 10px rgba(11, 35, 64, 0.08);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .theme-toggle-sidebar::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: linear-gradient(135deg, rgba(201, 161, 91, 0.1) 0%, rgba(11, 35, 64, 0.05) 100%);
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+
+    .theme-toggle-sidebar:hover::before {
+      opacity: 1;
+    }
+
+    .theme-toggle-sidebar:hover {
+      background: linear-gradient(135deg, rgba(201, 161, 91, 0.15) 0%, rgba(11, 35, 64, 0.1) 100%);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 25px rgba(201, 161, 91, 0.2);
+      border-color: rgba(201, 161, 91, 0.4);
+    }
+
+    .hamburger-btn {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      width: 48px;
+      height: 48px;
+      background: linear-gradient(135deg, rgba(248, 244, 238, 0.9) 0%, rgba(248, 244, 238, 0.95) 100%);
+      border: 1px solid rgba(201, 161, 91, 0.3);
+      border-radius: 12px;
+      cursor: pointer;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      box-shadow: 0 2px 10px rgba(11, 35, 64, 0.08);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hamburger-btn::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: linear-gradient(135deg, rgba(201, 161, 91, 0.1) 0%, rgba(11, 35, 64, 0.05) 100%);
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+
+    .hamburger-btn:hover::before {
+      opacity: 1;
+    }
+
+    .hamburger-btn:hover {
+      transform: scale(1.05);
+      box-shadow: 0 4px 20px rgba(201, 161, 91, 0.2);
+      border-color: rgba(201, 161, 91, 0.5);
+    }
+
+    .hamburger-btn.active {
+      background: linear-gradient(135deg, rgba(201, 161, 91, 0.2) 0%, rgba(11, 35, 64, 0.1) 100%);
+      border-color: rgba(201, 161, 91, 0.6);
+    }
+
+    .hamburger-line {
+      width: 24px;
+      height: 2px;
+      background: linear-gradient(90deg, #0b2340, #c9a15b);
+      margin: 3px auto;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      border-radius: 1px;
+      position: relative;
+    }
+
+    .hamburger-btn.active .hamburger-line:nth-child(1) {
+      transform: rotate(45deg) translate(6px, 6px);
+    }
+
+    .hamburger-btn.active .hamburger-line:nth-child(2) {
+      opacity: 0;
+    }
+
+    .hamburger-btn.active .hamburger-line:nth-child(3) {
+      transform: rotate(-45deg) translate(6px, -6px);
+    }
+
+    .navbar-brand {
+      font-family: 'Crimson Text', serif;
+      font-size: 2rem;
+      font-weight: 700;
+      color: #0b2340;
+      text-decoration: none;
+      letter-spacing: -0.02em;
+      position: relative;
+      text-shadow: 0 1px 2px rgba(11, 35, 64, 0.1);
+    }
+
+    .navbar-brand::after {
+      content: '';
+      position: absolute;
+      bottom: -4px;
+      left: 0;
+      width: 0;
+      height: 2px;
+      background: linear-gradient(90deg, #c9a15b, #0b2340);
+      transition: width 0.3s ease;
+    }
+
+    .navbar-brand:hover::after {
+      width: 100%;
+    }
+
+    .hero-banner {
+      background: linear-gradient(135deg, #0b2340 0%, #1a3a5c 50%, #c9a15b 100%);
+      color: #f8f4ee;
+      padding: 4rem 2rem;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+      margin-bottom: 2rem;
+    }
+
+    .hero-banner::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="luxury-pattern" width="100" height="100" patternUnits="userSpaceOnUse"><circle cx="25" cy="25" r="1" fill="rgba(255,255,255,0.1)"/><circle cx="75" cy="75" r="1" fill="rgba(255,255,255,0.1)"/></pattern></defs><rect width="100" height="100" fill="url(%23luxury-pattern)"/></svg>');
+      opacity: 0.3;
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 1;
+    }
+
+    .hero-title {
+      font-family: 'Crimson Text', serif;
+      font-size: 3rem;
+      font-weight: 700;
+      margin-bottom: 1rem;
+      letter-spacing: -0.02em;
+      text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+    }
+
+    .hero-subtitle {
+      font-size: 1.25rem;
+      margin-bottom: 2rem;
+      opacity: 0.9;
+      font-weight: 400;
+    }
+
+    .hero-cta {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.75rem;
+      background: linear-gradient(135deg, #c9a15b 0%, #d4b072 100%);
+      color: #0b2340;
+      padding: 1rem 2rem;
+      border-radius: 50px;
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 1.1rem;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      box-shadow: 0 4px 20px rgba(201, 161, 91, 0.3);
+      border: 2px solid rgba(255, 255, 255, 0.2);
+    }
+
+    .hero-cta:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 30px rgba(201, 161, 91, 0.4);
+      background: linear-gradient(135deg, #d4b072 0%, #c9a15b 100%);
+    }
+
+    .card-lux {
+      background: linear-gradient(135deg, rgba(248, 244, 238, 0.9) 0%, rgba(248, 244, 238, 0.95) 100%);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      border: 1px solid rgba(201, 161, 91, 0.2);
+      border-radius: 16px;
+      padding: 2rem;
+      box-shadow: 0 8px 30px rgba(11, 35, 64, 0.08);
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .card-lux::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: linear-gradient(90deg, #c9a15b, #0b2340);
+    }
+
+    .card-lux:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 16px 40px rgba(11, 35, 64, 0.12);
+      border-color: rgba(201, 161, 91, 0.4);
+    }
+
+    .card-title-lux {
+      font-family: 'Crimson Text', serif;
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: #0b2340;
+      margin-bottom: 1rem;
+    }
+
+    .metric-icon {
+      width: 56px;
+      height: 56px;
+      border-radius: 12px;
+      background: linear-gradient(135deg, #c9a15b 0%, #d4b072 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #0b2340;
+      font-size: 1.5rem;
+      box-shadow: 0 4px 15px rgba(201, 161, 91, 0.3);
+    }
+
+    .metric-value {
+      font-family: 'Crimson Text', serif;
+      font-size: 2rem;
+      font-weight: 700;
+      color: #0b2340;
+      margin: 0;
+    }
+
+    .metric-label {
+      font-size: 0.9rem;
+      color: #9aa3ad;
+      margin: 0;
+    }
+
+    /* Dark Mode Enhancements */
+    .theme-dark .luxury-navbar {
+      background: linear-gradient(135deg, rgba(11, 35, 64, 0.95) 0%, rgba(11, 35, 64, 0.98) 100%);
+      border-bottom-color: rgba(201, 161, 91, 0.3);
+    }
+
+    .theme-dark .sidebar {
+      background: linear-gradient(135deg, rgba(11, 35, 64, 0.98) 0%, rgba(11, 35, 64, 0.95) 100%);
+    }
+
+    .theme-dark .sidebar-link {
+      color: #f8f4ee;
+    }
+
+    .theme-dark .sidebar-link:hover {
+      background: linear-gradient(135deg, rgba(201, 161, 91, 0.15) 0%, rgba(11, 35, 64, 0.1) 100%);
+    }
+
+    .theme-dark .theme-toggle-sidebar {
+      background: linear-gradient(135deg, rgba(11, 35, 64, 0.1) 0%, rgba(201, 161, 91, 0.15) 100%);
+      color: #f8f4ee;
+      border-color: rgba(201, 161, 91, 0.3);
+    }
+
+    .theme-dark .card-lux {
+      background: linear-gradient(135deg, rgba(11, 35, 64, 0.9) 0%, rgba(11, 35, 64, 0.95) 100%);
+      border-color: rgba(201, 161, 91, 0.3);
+    }
+
+    .theme-dark .card-title-lux,
+    .theme-dark .metric-value {
+      color: #f8f4ee;
+    }
+
+    .theme-dark .metric-label {
+      color: #9aa3ad;
+    }
+
+    /* Mobile Responsiveness */
+    @media (max-width: 768px) {
+      .hero-title {
+        font-size: 2rem;
+      }
+
+      .hero-subtitle {
+        font-size: 1rem;
+      }
+
+      .sidebar-content {
+        padding: 1rem;
+      }
+
+      .sidebar-menu {
+        gap: 0.25rem;
+      }
+
+      .sidebar-link {
+        padding: 0.75rem 1rem;
+        font-size: 1rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Premium Luxury Navbar -->
+  <nav class="luxury-navbar">
+    <div class="navbar-container">
+      <div class="navbar-left">
+        <a href="#" class="navbar-brand">LuxuryDash</a>
+      </div>
+      <button class="hamburger-btn" id="hamburgerBtn">
+        <span class="hamburger-line"></span>
+        <span class="hamburger-line"></span>
+        <span class="hamburger-line"></span>
+      </button>
+    </div>
+  </nav>
+
+  <!-- Sidebar Overlay -->
+  <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+  <!-- Top-Sliding Luxury Sidebar -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-content">
+      <div style="text-align: center; margin-bottom: 1rem;">
+        <button class="sidebar-close" id="sidebarClose" style="float: right; background: none; border: none; font-size: 1.5rem; color: #0b2340; cursor: pointer; padding: 0.5rem; border-radius: 50%; transition: all 0.3s;">&times;</button>
+        <h2 style="font-family: 'Crimson Text', serif; font-size: 1.5rem; color: #0b2340; margin: 0; clear: both;">Premium Menu</h2>
+      </div>
+      <ul class="sidebar-menu">
+        <li><a href="#" class="sidebar-link"><i>ℹ️</i> About</a></li>
+        <li><a href="#" class="sidebar-link"><i>⚙️</i> Settings</a></li>
+        <li><a href="#" class="sidebar-link"><i>📞</i> Contact</a></li>
+        <li><a href="#" class="sidebar-link"><i>🔒</i> Privacy</a></li>
+        <li><a href="#" class="sidebar-link"><i>❓</i> Help</a></li>
+        <li><a href="#" class="sidebar-link"><i>🔑</i> Login</a></li>
+      </ul>
+      <button class="theme-toggle-sidebar" id="themeToggleSidebar">
+        <span id="themeIcon">🌙</span> Dark Mode
+      </button>
+    </div>
+  </aside>
+
+  <!-- Main Content -->
+  <main class="dashboard-main">
+    <div class="dashboard-content">
+      <!-- Premium Hero Banner -->
+      <section class="hero-banner">
+        <div class="hero-content">
+          <h2 class="hero-title">Welcome to Luxury Dashboard</h2>
+          <p class="hero-subtitle">Experience unparalleled elegance in modern web design</p>
+          <a href="#" class="hero-cta">
+            <span>Discover Premium</span>
+            <span>→</span>
+          </a>
+        </div>
+      </section>
+
+      <!-- Luxury Feature Cards -->
+      <div class="dashboard-grid">
+        <div class="card-lux">
+          <div class="card-header-lux">
+            <h3 class="card-title-lux">Sophisticated Design</h3>
+          </div>
+          <div class="card-metric">
+            <div class="metric-icon">💎</div>
+            <div>
+              <p class="metric-value">Premium</p>
+              <p class="metric-label">Crafted with excellence</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="card-lux">
+          <div class="card-header-lux">
+            <h3 class="card-title-lux">Smooth Animations</h3>
+          </div>
+          <div class="card-metric">
+            <div class="metric-icon">✨</div>
+            <div>
+              <p class="metric-value">Fluid</p>
+              <p class="metric-label">Seamless interactions</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="card-lux">
+          <div class="card-header-lux">
+            <h3 class="card-title-lux">Responsive Experience</h3>
+          </div>
+          <div class="card-metric">
+            <div class="metric-icon">📱</div>
+            <div>
+              <p class="metric-value">Adaptive</p>
+              <p class="metric-label">Perfect on all devices</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Premium Content Section -->
+      <section style="margin: 3rem 0; text-align: center;">
+        <h3 style="font-family: 'Crimson Text', serif; font-size: 2rem; color: #0b2340; margin-bottom: 1rem;">Elevated User Experience</h3>
+        <p style="font-size: 1.1rem; color: #666; max-width: 600px; margin: 0 auto; line-height: 1.6;">
+          This premium dashboard showcases the perfect blend of luxury aesthetics and modern functionality.
+          The top-sliding sidebar provides an elegant navigation experience with sophisticated animations and premium styling.
+        </p>
+      </section>
+    </div>
+  </main>
+
+  <script>
+    // Premium Hamburger Menu Toggle with Top Slide Animation
+    const hamburgerBtn = document.getElementById('hamburgerBtn');
+    const sidebar = document.getElementById('sidebar');
+    const sidebarOverlay = document.getElementById('sidebarOverlay');
+    const sidebarClose = document.getElementById('sidebarClose');
+
+    function toggleSidebar() {
+      sidebar.classList.toggle('open');
+      sidebarOverlay.classList.toggle('open');
+      hamburgerBtn.classList.toggle('active');
+    }
+
+    hamburgerBtn.addEventListener('click', toggleSidebar);
+    sidebarClose.addEventListener('click', toggleSidebar);
+    sidebarOverlay.addEventListener('click', toggleSidebar);
+
+    // Premium Theme Toggle
+    const themeToggleSidebar = document.getElementById('themeToggleSidebar');
+    const themeIcon = document.getElementById('themeIcon');
+    const body = document.body;
+
+    themeToggleSidebar.addEventListener('click', () => {
+      body.classList.toggle('theme-dark');
+      if (body.classList.contains('theme-dark')) {
+        themeIcon.textContent = '☀️';
+        themeToggleSidebar.innerHTML = '<span id="themeIcon">☀️</span> Light Mode';
+      } else {
+        themeIcon.textContent = '🌙';
+        themeToggleSidebar.innerHTML = '<span id="themeIcon">🌙</span> Dark Mode';
+      }
+    });
+
+    // Premium Keyboard Navigation
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && sidebar.classList.contains('open')) {
+        toggleSidebar();
+      }
+    });
+
+    // Smooth Scroll for Hero CTA
+    document.querySelector('.hero-cta').addEventListener('click', (e) => {
+      e.preventDefault();
+      document.querySelector('.dashboard-grid').scrollIntoView({
+        behavior: 'smooth'
+      });
+    });
+  </script>
+</body>
+</html>

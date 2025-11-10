@@ -5,6 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Wanderlust - Airbnb Clone</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Crimson+Text:ital,wght@0,400;0,600;0,700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="/css/style.css">
 </head>
 <body>
@@ -31,6 +36,218 @@
     <%- include("../includes/footer") %>
     
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script src="/js/script.js"></script>
+
+    <!-- Luxury Theme Management Script -->
+    <script>
+    // Theme management functions
+    class LuxuryThemeManager \{
+      constructor() {
+        this.themes = {
+          light: {
+            '--bg-color': '#ffffff',
+            '--text-color': '#212529',
+            '--navbar-bg': '#f8f9fa',
+            '--navbar-text': '#212529',
+            '--card-bg': '#ffffff',
+            '--card-border': '#dee2e6',
+            '--btn-primary': '#0d6efd',
+            '--btn-secondary': '#6c757d',
+            '--alert-success-bg': '#d1edff',
+            '--alert-success-text': '#0c63e4',
+            '--alert-danger-bg': '#f8d7da',
+            '--alert-danger-text': '#721c24'
+          },
+          dark: {
+            '--bg-color': '#121212',
+            '--text-color': '#ffffff',
+            '--navbar-bg': '#1a1a1a',
+            '--navbar-text': '#ffffff',
+            '--card-bg': '#1e1e1e',
+            '--card-border': '#333333',
+            '--btn-primary': '#0d6efd',
+            '--btn-secondary': '#6c757d',
+            '--alert-success-bg': '#1a4d7a',
+            '--alert-success-text': '#ffffff',
+            '--alert-danger-bg': '#7a1a1a',
+            '--alert-danger-text': '#ffffff'
+          },
+          blue: {
+            '--bg-color': '#e3f2fd',
+            '--text-color': '#0d47a1',
+            '--navbar-bg': '#1976d2',
+            '--navbar-text': '#ffffff',
+            '--card-bg': '#ffffff',
+            '--card-border': '#bbdefb',
+            '--btn-primary': '#1976d2',
+            '--btn-secondary': '#42a5f5',
+            '--alert-success-bg': '#c8e6c9',
+            '--alert-success-text': '#2e7d32',
+            '--alert-danger-bg': '#ffcdd2',
+            '--alert-danger-text': '#c62828'
+          },
+          green: {
+            '--bg-color': '#e8f5e8',
+            '--text-color': '#1b5e20',
+            '--navbar-bg': '#388e3c',
+            '--navbar-text': '#ffffff',
+            '--card-bg': '#ffffff',
+            '--card-border': '#c8e6c9',
+            '--btn-primary': '#388e3c',
+            '--btn-secondary': '#66bb6a',
+            '--alert-success-bg': '#c8e6c9',
+            '--alert-success-text': '#2e7d32',
+            '--alert-danger-bg': '#ffcdd2',
+            '--alert-danger-text': '#c62828'
+          },
+          purple: {
+            '--bg-color': '#f3e5f5',
+            '--text-color': '#4a148c',
+            '--navbar-bg': '#7b1fa2',
+            '--navbar-text': '#ffffff',
+            '--card-bg': '#ffffff',
+            '--card-border': '#e1bee7',
+            '--btn-primary': '#7b1fa2',
+            '--btn-secondary': '#ba68c8',
+            '--alert-success-bg': '#c8e6c9',
+            '--alert-success-text': '#2e7d32',
+            '--alert-danger-bg': '#ffcdd2',
+            '--alert-danger-text': '#c62828'
+          },
+          'pure-white': {
+            '--bg-color': '#ffffff',
+            '--text-color': '#000000',
+            '--navbar-bg': '#ffffff',
+            '--navbar-text': '#000000',
+            '--card-bg': '#ffffff',
+            '--card-border': '#000000',
+            '--btn-primary': '#000000',
+            '--btn-secondary': '#666666',
+            '--alert-success-bg': '#e8f5e8',
+            '--alert-success-text': '#000000',
+            '--alert-danger-bg': '#ffebee',
+            '--alert-danger-text': '#000000'
+          },
+          'pure-black': {
+            '--bg-color': '#000000',
+            '--text-color': '#ffffff',
+            '--navbar-bg': '#000000',
+            '--navbar-text': '#ffffff',
+            '--card-bg': '#000000',
+            '--card-border': '#ffffff',
+            '--btn-primary': '#ffffff',
+            '--btn-secondary': '#cccccc',
+            '--alert-success-bg': '#1a1a1a',
+            '--alert-success-text': '#ffffff',
+            '--alert-danger-bg': '#330000',
+            '--alert-danger-text': '#ffffff'
+          },
+          'high-contrast': {
+            '--bg-color': '#ffffff',
+            '--text-color': '#000000',
+            '--navbar-bg': '#000000',
+            '--navbar-text': '#ffffff',
+            '--card-bg': '#ffffff',
+            '--card-border': '#000000',
+            '--btn-primary': '#000000',
+            '--btn-secondary': '#666666',
+            '--alert-success-bg': '#000000',
+            '--alert-success-text': '#ffffff',
+            '--alert-danger-bg': '#ffffff',
+            '--alert-danger-text': '#000000'
+          },
+          monochrome: {
+            '--bg-color': '#f5f5f5',
+            '--text-color': '#333333',
+            '--navbar-bg': '#333333',
+            '--navbar-text': '#f5f5f5',
+            '--card-bg': '#f5f5f5',
+            '--card-border': '#999999',
+            '--btn-primary': '#333333',
+            '--btn-secondary': '#666666',
+            '--alert-success-bg': '#cccccc',
+            '--alert-success-text': '#333333',
+            '--alert-danger-bg': '#999999',
+            '--alert-danger-text': '#333333'
+          }
+        };
+        this.currentTheme = localStorage.getItem('theme') || 'light';
+        this.init();
+      }
+
+      init() {
+        this.applyTheme(this.currentTheme);
+        this.setupEventListeners();
+        this.updateToggleIcon();
+      }
+
+      applyTheme(themeName) {
+        const theme = this.themes[themeName];
+        if (!theme) return;
+
+        const root = document.documentElement;
+        Object.keys(theme).forEach(property => {
+          root.style.setProperty(property, theme[property]);
+        });
+
+        // Update navbar classes for Bootstrap compatibility
+        const navbar = document.querySelector('.luxury-navbar');
+        if (navbar) {
+          // Apply theme-specific styles to luxury navbar
+          if (themeName === 'dark') {
+            navbar.style.background = 'linear-gradient(135deg, rgba(11, 35, 64, 0.9) 0%, rgba(248, 244, 238, 0.95) 100%)';
+          } else {
+            navbar.style.background = 'linear-gradient(135deg, rgba(248, 244, 238, 0.85) 0%, rgba(248, 244, 238, 0.95) 100%)';
+          }
+        }
+
+        this.currentTheme = themeName;
+        localStorage.setItem('theme', themeName);
+        this.updateToggleIcon();
+      }
+
+      setupEventListeners() {
+        // Advanced theme selector
+        document.addEventListener('click', (e) => {
+          if (e.target.classList.contains('theme-option')) {
+            e.preventDefault();
+            const theme = e.target.dataset.theme;
+            this.applyTheme(theme);
+          }
+        });
+
+        // Simple toggle button for light/dark
+        const toggleBtn = document.getElementById('themeToggle');
+        if (toggleBtn) {
+          toggleBtn.addEventListener('click', () => {
+            const currentTheme = this.currentTheme;
+            const newTheme = (currentTheme === 'light' || currentTheme === 'pure-white') ? 'dark' : 'light';
+            this.applyTheme(newTheme);
+          });
+        }
+      }
+
+      updateToggleIcon() {
+        const iconElement = document.getElementById('themeIcon');
+        if (iconElement) {
+          const isDark = this.currentTheme === 'dark' || this.currentTheme === 'pure-black';
+          iconElement.textContent = isDark ? '🌙' : '🌞';
+        }
+
+        // Update sidebar theme icon
+        const sidebarIcon = document.getElementById('themeIconSidebar');
+        if (sidebarIcon) {
+          const isDark = this.currentTheme === 'dark' || this.currentTheme === 'pure-black';
+          sidebarIcon.textContent = isDark ? '🌙' : '🌞';
+        }
+      }
+    }
+
+    // Initialize theme manager when DOM is loaded
+    document.addEventListener('DOMContentLoaded', () => {
+      window.luxuryThemeManager = new LuxuryThemeManager();
+    });
+    </script>
 </body>
 </html>
